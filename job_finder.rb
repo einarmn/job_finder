@@ -1,20 +1,19 @@
 require "httparty"
 require "nokogiri"
 
-
-response = HTTParty.get("https://miami.craigslist.org/search/sof")
-
-dom = Nokogiri::HTML(response.body)
+def list(field)
+	link = "https://miami.craigslist.org/search/#{field}"
+	response = HTTParty.get("#{link}")
+	dom = Nokogiri::HTML(response.body)
 
 # p dom.css('a.hdrlnk').class
 
-job_titles = []
-dom.css('a.hdrlnk').each_with_index do |e,i|
-job_titles << (i+1).to_s + "- " + e.content + "\n" + "\t" + e["href"]
+	job_titles = []
+	dom.css('a.hdrlnk').each_with_index do |e,i|
+	job_titles << (i+1).to_s + "- " + e.content + "\n" + "\t" + e["href"]
+	end
+	puts job_titles
 end
-
-
-puts job_titles
 
 search = true
 while search == true
@@ -23,37 +22,13 @@ while search == true
 	input = gets.chomp.downcase
 	case input
 	when "admin"
-		response = HTTParty.get("https://miami.craigslist.org/search/ofc")
-		dom = Nokogiri::HTML(response.body)
-		job_titles = []
-		dom.css('a.hdrlnk').each_with_index do |e,i|
-		job_titles << (i+1).to_s + "- " + e.content + "\n" + "\t" + e["href"]
-		end
-		puts job_titles
+		list("ofc")
 	when "business"
-		response = HTTParty.get("https://miami.craigslist.org/search/bus")
-		dom = Nokogiri::HTML(response.body)
-		job_titles = []
-		dom.css('a.hdrlnk').each_with_index do |e,i|
-		job_titles << (i+1).to_s + "- " + e.content + "\n" + "\t" + e["href"]
-		end
-		puts job_titles
+		list("bus")
 	when "healthcare"
-		response = HTTParty.get("https://miami.craigslist.org/search/hea")
-		dom = Nokogiri::HTML(response.body)
-		job_titles = []
-		dom.css('a.hdrlnk').each_with_index do |e,i|
-		job_titles << (i+1).to_s + "- " + e.content + "\n" + "\t" + e["href"]
-		end
-		puts job_titles
+		list("hea")
 	when "software"
-		response = HTTParty.get("https://miami.craigslist.org/search/sof")
-		dom = Nokogiri::HTML(response.body)
-		job_titles = []
-		dom.css('a.hdrlnk').each_with_index do |e,i|
-		job_titles << (i+1).to_s + "- " + e.content + "\n" + "\t" + e["href"]
-		end
-		puts job_titles
+		list("sof")
 	else
 		puts "We currently unable to connect the Craigslist website"
 		search = false
